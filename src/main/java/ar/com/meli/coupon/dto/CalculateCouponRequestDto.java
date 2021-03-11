@@ -5,7 +5,7 @@ import java.util.List;
 public class CalculateCouponRequestDto {
 
     private List<String> item_ids;
-    private float amount;
+    private Float amount;
 
     public List<String> getItem_ids() {
         return item_ids;
@@ -15,11 +15,11 @@ public class CalculateCouponRequestDto {
         this.item_ids = item_ids;
     }
 
-    public float getAmount() {
+    public Float getAmount() {
         return amount;
     }
 
-    public void setAmount(float amount) {
+    public void setAmount(Float amount) {
         this.amount = amount;
     }
 }

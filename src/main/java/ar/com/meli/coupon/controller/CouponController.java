@@ -3,6 +3,7 @@ package ar.com.meli.coupon.controller;
 import ar.com.meli.coupon.dto.CalculateCouponRequestDto;
 import ar.com.meli.coupon.dto.CalculateCouponResponseDto;
 import ar.com.meli.coupon.dto.ResponseErrorDto;
+import ar.com.meli.coupon.exceptions.InsufficientAmountException;
 import ar.com.meli.coupon.service.CouponService;
 import ar.com.meli.coupon.utils.Messages;
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,6 +39,13 @@ public class CouponController {
     @PostMapping
     public ResponseEntity<Object> calculateProductsForCoupon(@RequestBody CalculateCouponRequestDto calculateCouponRequestDto) {
         //couponService.metodo
-        return new ResponseEntity<>(couponService.calculateProducts(calculateCouponRequestDto), HttpStatus.OK);
+        try {
+            return new ResponseEntity<>(couponService.calculateProducts(calculateCouponRequestDto), HttpStatus.OK);
+        } catch (InsufficientAmountException e) {
+            logger.error(messages.get("couponcontroller.insufficient.amount.code"));
+            return new ResponseEntity(new ResponseErrorDto(
+                    messages.get("couponcontroller.insufficient.amount.code"),
+                    messages.get("couponcontroller.insufficient.amount.message")), HttpStatus.NOT_FOUND);
+        }
     }
 }
