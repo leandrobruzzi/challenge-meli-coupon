@@ -38,6 +38,6 @@ public class CouponController {
     @PostMapping
     public ResponseEntity<Object> calculateProductsForCoupon(@RequestBody CalculateCouponRequestDto calculateCouponRequestDto) {
         //couponService.metodo
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        return new ResponseEntity<>(couponService.calculateProducts(calculateCouponRequestDto), HttpStatus.OK);
     }
 }
