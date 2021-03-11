@@ -1,4 +1,4 @@
-package ar.com.meli.cupon.dto;
+package ar.com.meli.coupon.dto;
 
 import java.util.List;
 

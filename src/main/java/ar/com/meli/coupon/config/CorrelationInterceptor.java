@@ -1,4 +1,4 @@
-package ar.com.meli.cupon.config;
+package ar.com.meli.coupon.config;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.MDC;

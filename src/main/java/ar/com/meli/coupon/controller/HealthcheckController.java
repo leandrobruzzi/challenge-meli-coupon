@@ -1,4 +1,4 @@
-package ar.com.meli.cupon.controller;
+package ar.com.meli.coupon.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

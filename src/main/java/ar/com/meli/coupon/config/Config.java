@@ -1,4 +1,4 @@
-package ar.com.meli.cupon.config;
+package ar.com.meli.coupon.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;

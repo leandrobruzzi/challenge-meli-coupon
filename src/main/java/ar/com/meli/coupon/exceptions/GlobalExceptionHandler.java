@@ -1,7 +1,7 @@
-package ar.com.meli.cupon.exceptions;
+package ar.com.meli.coupon.exceptions;
 
-import ar.com.meli.cupon.dto.ResponseErrorDto;
-import ar.com.meli.cupon.utils.Messages;
+import ar.com.meli.coupon.dto.ResponseErrorDto;
+import ar.com.meli.coupon.utils.Messages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,10 +1,10 @@
-package ar.com.meli.cupon.controller;
+package ar.com.meli.coupon.controller;
 
-import ar.com.meli.cupon.dto.CalculateCouponRequestDto;
-import ar.com.meli.cupon.dto.CalculateCouponResponseDto;
-import ar.com.meli.cupon.dto.ResponseErrorDto;
-import ar.com.meli.cupon.service.CouponService;
-import ar.com.meli.cupon.utils.Messages;
+import ar.com.meli.coupon.dto.CalculateCouponRequestDto;
+import ar.com.meli.coupon.dto.CalculateCouponResponseDto;
+import ar.com.meli.coupon.dto.ResponseErrorDto;
+import ar.com.meli.coupon.service.CouponService;
+import ar.com.meli.coupon.utils.Messages;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;

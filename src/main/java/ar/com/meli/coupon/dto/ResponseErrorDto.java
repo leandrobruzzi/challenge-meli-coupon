@@ -1,6 +1,4 @@
-package ar.com.meli.cupon.dto;
-
-import org.apache.commons.lang3.exception.ExceptionUtils;
+package ar.com.meli.coupon.dto;
 
 public class ResponseErrorDto {
 
