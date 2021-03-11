@@ -1,4 +1,4 @@
-package ar.com.meli.cupon;
+package ar.com.meli.coupon;
 
 import java.util.ArrayList;
 import java.util.List;

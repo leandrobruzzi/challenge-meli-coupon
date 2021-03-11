@@ -1,4 +1,4 @@
-package ar.com.meli.cupon.service;
+package ar.com.meli.coupon.service;
 
 public interface CouponService {
 

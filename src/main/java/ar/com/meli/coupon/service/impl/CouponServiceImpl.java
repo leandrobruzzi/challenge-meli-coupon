@@ -1,6 +1,6 @@
-package ar.com.meli.cupon.service.impl;
+package ar.com.meli.coupon.service.impl;
 
-import ar.com.meli.cupon.service.CouponService;
+import ar.com.meli.coupon.service.CouponService;
 import org.springframework.stereotype.Service;
 
 @Service

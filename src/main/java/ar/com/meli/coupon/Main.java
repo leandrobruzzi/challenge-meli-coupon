@@ -1,6 +1,6 @@
-package ar.com.meli.cupon;
+package ar.com.meli.coupon;
 
-import ar.com.meli.cupon.exceptions.MaxCominationException;
+import ar.com.meli.coupon.exceptions.MaxCominationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
