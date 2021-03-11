@@ -1,6 +1,6 @@
 package ar.com.meli.cupon.exceptions;
 
-import ar.com.meli.cupon.dto.ResponseError;
+import ar.com.meli.cupon.dto.ResponseErrorDto;
 import ar.com.meli.cupon.utils.Messages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +21,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private Messages messages;
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ResponseError> handleUncontrolledException(Exception e, WebRequest req){
+    public ResponseEntity<ResponseErrorDto> handleUncontrolledException(Exception e, WebRequest req){
         logger.error(messages.get("globalexceptionhandler.uncontroled.error.code"), e);
-        return new ResponseEntity(new ResponseError(messages.get("globalexceptionhandler.uncontroled.error.code"), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity(new ResponseErrorDto(messages.get("globalexceptionhandler.uncontroled.error.code"), e.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

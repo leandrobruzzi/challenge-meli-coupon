@@ -2,14 +2,14 @@ package ar.com.meli.cupon.dto;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 
-public class ResponseError {
+public class ResponseErrorDto {
 
     private String code;
     private String message;
 
-    public ResponseError() { }
+    public ResponseErrorDto() { }
 
-    public ResponseError(String code, String message) {
+    public ResponseErrorDto(String code, String message) {
         this.code = code;
         this.message = message;
     }
