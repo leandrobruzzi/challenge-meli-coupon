@@ -95,14 +95,16 @@ public class CouponServiceImpl implements CouponService {
         itemsList = filerGreaterThanAmount(itemsList, amount);
 
         //Si hay un solo elemento significa que hay un item que gasta el total del monto
+        List<Map.Entry<String, Float>> initialCombination = new ArrayList<Map.Entry<String, Float>>();
         if(itemsList.size() == 0) {
             throw new InsufficientAmountException();
         }else if(itemsList.size() == 1){
-            return getListOfItems(new CombinationDto(itemsList));
+            initialCombination.add(itemsList.get(0));
+            maxCombination.setCombination(initialCombination);
+            return getListOfItems(maxCombination);
         }
 
         //Cargo el item con mayor valor por si todas las combinaciones de dos items superan el monto permitido
-        List<Map.Entry<String, Float>> initialCombination = new ArrayList<Map.Entry<String, Float>>();
         initialCombination.add(itemsList.get(itemsList.size() - 1));
         maxCombination.setCombination(initialCombination);
 

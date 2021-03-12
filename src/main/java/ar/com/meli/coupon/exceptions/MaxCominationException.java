@@ -6,12 +6,4 @@ public class MaxCominationException extends Exception{
         super();
     }
 
-    public MaxCominationException(String message) {
-        super(message);
-    }
-
-    public MaxCominationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
 }

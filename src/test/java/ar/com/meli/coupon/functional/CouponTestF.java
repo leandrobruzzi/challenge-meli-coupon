@@ -2,6 +2,7 @@ package ar.com.meli.coupon.functional;
 
 import ar.com.meli.coupon.controller.CouponController;
 import ar.com.meli.coupon.dto.CalculateCouponRequestDto;
+import ar.com.meli.coupon.utils.ConfigurationConstants;
 import org.json.JSONException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@TestPropertySource(locations = "/application-test.properties")
+@TestPropertySource(locations = ConfigurationConstants.TEST_PROPERTIES_URL)
 public class CouponTestF {
 
     @Autowired
