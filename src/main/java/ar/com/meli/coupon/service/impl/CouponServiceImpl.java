@@ -3,12 +3,18 @@ package ar.com.meli.coupon.service.impl;
 import ar.com.meli.coupon.dto.CalculateCouponRequestDto;
 import ar.com.meli.coupon.dto.CalculateCouponResponseDto;
 import ar.com.meli.coupon.dto.CombinationDto;
+import ar.com.meli.coupon.dto.ItemDto;
 import ar.com.meli.coupon.exceptions.InsufficientAmountException;
 import ar.com.meli.coupon.exceptions.MaxCominationException;
 import ar.com.meli.coupon.service.CouponService;
+import ar.com.meli.coupon.utils.Messages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +25,15 @@ import java.util.Map;
 public class CouponServiceImpl implements CouponService {
 
     private final Logger logger = LoggerFactory.getLogger(CouponService.class);
+
+    @Autowired
+    private Messages messages;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Value("${meli.url.base}")
+    private String meliUrlBase;
 
     @Override
     public CalculateCouponResponseDto calculateProducts(CalculateCouponRequestDto calculateCouponRequestDto) throws InsufficientAmountException {
@@ -32,19 +47,20 @@ public class CouponServiceImpl implements CouponService {
     }
 
     private Map<String, Float> findItems(List<String> item_ids) {
-        //TODO: Consumir servicio para obtener el valor del item.
-        //Armo un set de datos random para probar
+        //Consumo servicio para obtener el valor de los items.
         Map<String, Float> items = new HashMap<>();
+        logger.info("Consultando valor de productos...");
         for (int i = 0; i<item_ids.size(); i++){
-            float valor = (float) (Math.round( (Math.random()*(500-1)+1) * 100 ) / 100d);
-            items.put(item_ids.get(i), valor);
-            logger.info("Item: " + item_ids.get(i) + " - Valor: " + valor);
+            try{
+                ResponseEntity<ItemDto> response = restTemplate.getForEntity(meliUrlBase + "/items/" + item_ids.get(i).replace("-",""), ItemDto.class);
+                items.put(item_ids.get(i), response.getBody().getPrice());
+                logger.info("Item: " + item_ids.get(i) + " - Valor: " + response.getBody().getPrice());
+            }catch (Exception e){
+                //En este caso decidi no penalizar el calculo del cupon ya que al ingresar los valores a mano es probable que alguno este mal escrito
+                //Pero podria explotar la exception en este punto y cortar el proceso informando Ocurrio un error intentelo mas tarde
+                logger.error(messages.get("cuponservice.failed.find.product"), e);
+            }
         }
-        /*items.put("MLA1", Float.valueOf(100));
-        items.put("MLA2", Float.valueOf(210));
-        items.put("MLA3", Float.valueOf(260));
-        items.put("MLA4", Float.valueOf(30));
-        items.put("MLA5", Float.valueOf(90));*/
 
         return items;
     }
@@ -61,7 +77,7 @@ public class CouponServiceImpl implements CouponService {
         for(int i = idx+1 ; i < options.size(); i++) {
             List<Map.Entry<String, Float>> output = new ArrayList<>(input);
             output.add(options.get(i));
-            logger.info(output.toString());
+            logger.debug(output.toString());
             verificateMaxCombination(output, amount, maxCombination);
 
             findValue(output,++idx, options, amount, maxCombination);
@@ -78,17 +94,17 @@ public class CouponServiceImpl implements CouponService {
         //Filtro los items que superan el monto permitido, si encuentro uno con valor exacto solo retorno ese.
         itemsList = filerGreaterThanAmount(itemsList, amount);
 
-        //Cargo el item con mayor valor por si todas las combinaciones de dos items superan el monto permitido
-        List<Map.Entry<String, Float>> initialCombination = new ArrayList<Map.Entry<String, Float>>();
-        initialCombination.add(itemsList.get(itemsList.size() - 1));
-        maxCombination.setCombination(initialCombination);
-
         //Si hay un solo elemento significa que hay un item que gasta el total del monto
         if(itemsList.size() == 0) {
             throw new InsufficientAmountException();
         }else if(itemsList.size() == 1){
             return getListOfItems(new CombinationDto(itemsList));
         }
+
+        //Cargo el item con mayor valor por si todas las combinaciones de dos items superan el monto permitido
+        List<Map.Entry<String, Float>> initialCombination = new ArrayList<Map.Entry<String, Float>>();
+        initialCombination.add(itemsList.get(itemsList.size() - 1));
+        maxCombination.setCombination(initialCombination);
 
         //Recorro los items y realizo la combinatoria completa (Poco eficiente)
         //TODO: Buscar la forma de hacer este proceso mas eficiente, a mil registros cuelgo el servidor.
@@ -147,6 +163,7 @@ public class CouponServiceImpl implements CouponService {
                 newItemList.add(item);
             }
         }
+
         return newItemList;
     }
 
