@@ -1,18 +1,18 @@
-package ar.com.meli.cupon;
+package ar.com.meli.coupon.dto;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class Combination {
+public class CombinationDto {
 
     private List<Map.Entry<String, Float>> combination = new ArrayList<>();
     private Float value = 0F;
 
-    public Combination(){
+    public CombinationDto(){
 
     }
-    public Combination(List<Map.Entry<String, Float>> combination) {
+    public CombinationDto(List<Map.Entry<String, Float>> combination) {
         this.combination = combination;
         setValue();
     }

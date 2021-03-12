@@ -1,10 +1,10 @@
-package ar.com.meli.cupon;
+package ar.com.meli.coupon;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class CuponApplicationTests {
+class CouponApplicationTests {
 
 	@Test
 	void contextLoads() {
