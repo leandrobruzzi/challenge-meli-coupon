@@ -38,7 +38,6 @@ public class CouponController {
     })
     @PostMapping
     public ResponseEntity<Object> calculateProductsForCoupon(@RequestBody CalculateCouponRequestDto calculateCouponRequestDto) {
-        //couponService.metodo
         try {
             return new ResponseEntity<>(couponService.calculateProducts(calculateCouponRequestDto), HttpStatus.OK);
         } catch (InsufficientAmountException e) {
