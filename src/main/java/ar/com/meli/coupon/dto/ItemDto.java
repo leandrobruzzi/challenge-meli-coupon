@@ -38,4 +38,13 @@ public class ItemDto {
     public void setSite_id(String site_id) {
         this.site_id = site_id;
     }
+
+    public ItemDto(){ }
+
+    public ItemDto(String id, String title, Float price, String site_id) {
+        this.id = id;
+        this.title = title;
+        this.price = price;
+        this.site_id = site_id;
+    }
 }
