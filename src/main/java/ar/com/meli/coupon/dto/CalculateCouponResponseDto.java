@@ -23,6 +23,8 @@ public class CalculateCouponResponseDto {
         this.total = total;
     }
 
+    public CalculateCouponResponseDto() { }
+
     public CalculateCouponResponseDto(List<String> item_ids, Float total) {
         this.item_ids = item_ids;
         this.total = total;
