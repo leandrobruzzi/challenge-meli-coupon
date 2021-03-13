@@ -34,7 +34,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @SpringBootTest
 @TestPropertySource(locations = ConfigurationConstants.TEST_PROPERTIES_URL)
-public class CouponTestF {
+public class CouponFunctionalTest {
 
     @Autowired
     private CouponController couponController;
