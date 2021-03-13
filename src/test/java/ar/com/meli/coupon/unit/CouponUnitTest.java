@@ -33,7 +33,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @SpringBootTest
 @TestPropertySource(locations = ConfigurationConstants.TEST_PROPERTIES_URL)
-public class CouponTestU {
+public class CouponUnitTest {
 
     @Autowired
     private CouponService couponService;

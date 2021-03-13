@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
 
 @SpringBootTest
 @TestPropertySource(locations = ConfigurationConstants.TEST_PROPERTIES_URL)
-public class UtilsTestU {
+public class UtilsUnitTest {
 
     @Autowired
     private HealthcheckController healthcheckController;
