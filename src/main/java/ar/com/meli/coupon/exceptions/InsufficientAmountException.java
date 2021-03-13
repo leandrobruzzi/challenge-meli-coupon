@@ -6,12 +6,4 @@ public class InsufficientAmountException extends Exception{
         super();
     }
 
-    public InsufficientAmountException(String message) {
-        super(message);
-    }
-
-    public InsufficientAmountException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
 }
