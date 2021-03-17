@@ -6,6 +6,7 @@ import ar.com.meli.coupon.dto.CombinationDto;
 import ar.com.meli.coupon.dto.ItemDto;
 import ar.com.meli.coupon.exceptions.InsufficientAmountException;
 import ar.com.meli.coupon.exceptions.MaxCominationException;
+import ar.com.meli.coupon.exceptions.ValueGreaterThanAllowedAmountException;
 import ar.com.meli.coupon.service.CouponService;
 import ar.com.meli.coupon.utils.Messages;
 import org.slf4j.Logger;
@@ -39,9 +40,7 @@ public class CouponServiceImpl implements CouponService {
     public CalculateCouponResponseDto calculateProducts(CalculateCouponRequestDto calculateCouponRequestDto) throws InsufficientAmountException {
         CombinationDto maxCombination = new CombinationDto();
         logger.info("Armando set de datos...");
-
         Map<String, Float> items = findItems(calculateCouponRequestDto.getItem_ids());
-        logger.info("Calculando mejor combinacion de productos...");
         List<String> itemsResponse = calculate(items, calculateCouponRequestDto.getAmount(), maxCombination);
         return new CalculateCouponResponseDto(itemsResponse, maxCombination.getValue());
     }
@@ -54,7 +53,6 @@ public class CouponServiceImpl implements CouponService {
             try{
                 ResponseEntity<ItemDto> response = restTemplate.getForEntity(meliUrlBase + "/items/" + item_ids.get(i).replace("-",""), ItemDto.class);
                 items.put(item_ids.get(i), response.getBody().getPrice());
-                logger.info("Item: " + item_ids.get(i) + " - Valor: " + response.getBody().getPrice());
             }catch (Exception e){
                 //En este caso decidi no penalizar el calculo del cupon ya que al ingresar los valores a mano es probable que alguno este mal escrito
                 //Pero podria explotar la exception en este punto y cortar el proceso informando Ocurrio un error intentelo mas tarde
@@ -74,14 +72,25 @@ public class CouponServiceImpl implements CouponService {
      * @throws MaxCominationException
      */
     private void findValue(List<Map.Entry<String, Float>> input, int idx, List<Map.Entry<String, Float>> options, Float amount, CombinationDto maxCombination) throws MaxCominationException {
-        for(int i = idx+1 ; i < options.size(); i++) {
-            List<Map.Entry<String, Float>> output = new ArrayList<>(input);
-            output.add(options.get(i));
-            logger.debug(output.toString());
-            verificateMaxCombination(output, amount, maxCombination);
+        try {
+            for (int i = idx + 1; i < options.size(); i++) {
+                List<Map.Entry<String, Float>> output = new ArrayList<>(input);
 
-            findValue(output,++idx, options, amount, maxCombination);
+                output.add(options.get(i));
+                logger.debug(output.toString());
+                verificateMaxCombination(output, amount, maxCombination);
+
+                findValue(output, ++idx, options, amount, maxCombination);
+            }
+        }catch (ValueGreaterThanAllowedAmountException e){
+            //En este punto no tiene sentido seguir con las combinaciones siguientes porque siempre seran mayores al monto.
+            logger.debug(e.getMessage());
         }
+    }
+
+    @Override
+    public List<String> stressTest(Map<String, Float> items, Float amount, CombinationDto maxCombination) throws InsufficientAmountException {
+        return calculate(items,amount,maxCombination);
     }
 
     private List<String> calculate(Map<String, Float> items, Float amount, CombinationDto maxCombination) throws InsufficientAmountException {
@@ -111,7 +120,10 @@ public class CouponServiceImpl implements CouponService {
         //Recorro los items y realizo la combinatoria completa (Poco eficiente)
         //TODO: Buscar la forma de hacer este proceso mas eficiente, a mil registros cuelgo el servidor.
         try{
+            logger.info("Lista de items a trabajar: " + itemsList.toString());
+            logger.info("Calculando mejor combinacion de productos...");
             for (int i=0; i<itemsList.size(); i++){
+                logger.debug("Valor a combinar: " + itemsList.get(i).getKey() + "=" + itemsList.get(i).getValue());
                 List<Map.Entry<String, Float>> input = new ArrayList<>();
                 input.add(itemsList.get(i));
                 findValue(input, i, itemsList, amount, maxCombination);
@@ -130,12 +142,15 @@ public class CouponServiceImpl implements CouponService {
      * @param output
      * @param amount
      */
-    private void verificateMaxCombination(List<Map.Entry<String, Float>> output, Float amount, CombinationDto maxCombination) throws MaxCominationException {
+    private void verificateMaxCombination(List<Map.Entry<String, Float>> output, Float amount, CombinationDto maxCombination) throws MaxCominationException, ValueGreaterThanAllowedAmountException {
         float val = 0;
         for (Map.Entry<String, Float> item : output) {
             val = val + item.getValue();
         }
-        if(val > maxCombination.getValue() && val <= amount ){
+        if(val > amount){
+            throw new ValueGreaterThanAllowedAmountException(messages.get("cuponservice.valuegreaterthanallowedamount"));
+        }
+        if(val > maxCombination.getValue()){
             maxCombination.setCombination(output);
         }
         if(maxCombination.getValue().equals(amount)){
