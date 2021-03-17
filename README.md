@@ -30,7 +30,7 @@ En la variable Path agregar:
 %JAVA_HOME%/bin
 %M2_HOME%/bin
 
-Abrir cmd y ejecutar mvn -v para verificar la correcta instalacion.
+Abrir cmd y ejecutar "mvn -v" para verificar la correcta instalacion.
 
 ----------Ejemplo----------
 C:/Users/Leandro>mvn -v
@@ -74,6 +74,18 @@ B) Importar proyecto en IntelliJ ir a la clase CouponApplication y darle "Run"
 
 Para verificar que la API este corriendo vamos a ejecutar el HealthCheck.
 Desde un navegador ingresar a http://localhost:8080/ nos tiene que mostrar como respuesta un "OK".
+También, desde postman, podes probar el servicio solicitado.
+```
+POST - http://localhost:8080/coupon
+Body:
+{
+"item_ids": [
+"MLA656039997",
+"MLA839687279"
+],
+"amount": 600
+}
+```
 
 ## Ejecutando las pruebas ⚙️
 
@@ -91,8 +103,6 @@ https://dashboard.heroku.com/apps
 * [Maven](https://maven.apache.org/) - Gestor de dependencias
 
 ## Autores ✒️
-
-_Menciona a todos aquellos que ayudaron a levantar el proyecto desde sus inicios_
 
 * **Leandro Bruzzi** - *Trabajo Inicial & Documentación*
 
